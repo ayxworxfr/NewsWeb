@@ -1,0 +1,155 @@
+﻿@model IEnumerable<NewsWeb.Models.Article>
+
+@{
+    ViewBag.Title = "Show";
+}
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - WORXFR</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <script src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:9170/Categorie/FindAll",
+                dataType: "json",
+                error: function () {
+                    alert('smx失败 ');
+                },
+                success: function (data) {
+                    var html = '<ul class="list-group">';
+
+                    $.each(data, function (commentIndex, comment) {
+                        html += '<li class="list-group-item">' + comment['CategoryName'] + '</li>';
+                    });
+                    html += '</ul>';
+                    $('.categorie').html(html);
+                }
+            });
+
+            $('.active').hide();
+            $(".intr").bind("click", function () {
+                $(function () {
+                    $('.intr').click(function () {
+                        var text = $(this).text();
+
+                        $.ajax({
+                            type: "POST",
+                            url: "http://localhost:9170/News/FindNews",
+                            data: { intro: text },
+                            dataType: "json",
+                            error: function () {
+                                alert('smx失败 ');
+                            },
+                            success: function (data) {
+                                var html = '<div class="panel panel-default"><div class="panel-heading style="text-align:center" "><h3 class="panel-title">作者：' + data['Author'] + '  来源：' + data['Source'] +'</h3></div><div class="panel-body">' + data['Content'] +'</div></div>'
+                                
+                                $('#resText').html(html);
+                                $('.active').html(text);
+                                $('.newsList').hide();
+                                $('.active').show();
+                            }
+                        });
+                    });
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-offset-3 col-lg-9">
+                <nav class="navbar navbar-default" role="navigation">
+                    <div class="container-fluid">
+                        <div class="navbar-header">
+                            <a class="navbar-brand" href="#">网站首页</a>
+                        </div>
+                        <div>
+                            <ul class="nav navbar-nav">
+                                <li class="newActive"><a href="#">最新动态</a></li>
+                                <li><a href="#">产品介绍</a></li>
+                                <li><a href="#">客户服务</a></li>
+                                <li><a href="#">关于我们</a></li>
+                                <li class="dropdown" style="margin-right:0">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                        Java
+                                        <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">jmeter</a></li>
+                                        <li><a href="#">EJB</a></li>
+                                        <li><a href="#">Jasper Report</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">分离的链接</a></li>
+                                        <li class="divider"></li>
+                                        <li><a href="#">另一个分离的链接</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div>
+        <img src="~/Image/index.png" style="width: 76%; height:200px;margin-left:12%" />
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 hidden-md categorie">
+                <ul class="list-group">
+                    <li class="list-group-item">24*7 支持</li>
+                    <li class="list-group-item">每年更新成本</li>
+                </ul>
+            </div>
+            <div class="col-md-9">
+                <div>
+                    <ul class="breadcrumb">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="http://localhost:9170/News/Show">Show</a></li>
+                        <li class="active"></li>
+                    </ul>
+                </div>
+                <div class="newsList">
+                    <ul class="list-group">
+                        @foreach (var item in Model)
+                        {
+                            <li class="list-group-item intr">@Html.DisplayFor(modelItem => item.Intro)</li>
+                        }
+                    </ul>
+                </div>
+
+                <div class="newsList">
+                    <a href="@ViewBag.page_pre">上一页</a>
+                    <a href="@ViewBag.page_next">下一页</a>
+                    <a href="@ViewBag.page_tail">尾页</a>
+                </div>
+
+                <div>
+                    <div id="resText">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</body>
+</html>
