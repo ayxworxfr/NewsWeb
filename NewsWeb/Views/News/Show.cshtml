@@ -20,25 +20,49 @@
     <script src="/Scripts/jquery-3.3.1.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $.ajax({
-                type: "POST",
-                url: "http://localhost:9170/Categorie/FindAll",
-                dataType: "json",
-                error: function () {
-                    alert('smx失败 ');
-                },
-                success: function (data) {
-                    var html = '<ul class="list-group">';
+            //$.ajax({
+            //    type: "POST",
+            //    url: "http://localhost:9170/Categorie/FindAll",
+            //    dataType: "json",
+            //    error: function () {
+            //        alert('smx失败 ');
+            //    },
+            //    success: function (data) {
+            //        var html = '<ul class="list-group">';
 
-                    $.each(data, function (commentIndex, comment) {
-                        html += '<li class="list-group-item">' + comment['CategoryName'] + '</li>';
+            //        $.each(data, function (commentIndex, comment) {
+            //            html += '<li class="list-group-item">' + comment['CategoryName'] + '</li>';
+            //        });
+            //        html += '</ul>';
+            //        $('.categorie').html(html);
+            //    }
+            //});
+            
+            $(".cate").bind("click", function () {
+                $(function () {
+                    $('.cate').click(function () {
+                        var text = $(this).text();
+                        window.location = "http://localhost:9170/News/FilterCa?categorie="+text;
+                        //$.ajax({
+                        //    type: "POST",
+                        //    url: "http://localhost:9170/News/FilterCa",
+                        //    data: { ca: text },
+                        //    dataType: "json",
+                        //    error: function () {
+                        //        alert('smx失败 ');
+                        //    },
+                        //    success: function (data) {
+                        //        var html = '<div class="panel panel-default"><div class="panel-heading style="text-align:center" "><h3 class="panel-title">作者：' + data['Author'] + '  来源：' + data['Source'] + '</h3></div><div class="panel-body">' + data['Content'] + '</div></div>'
+
+                        //        $('#resText').html(html);
+                        //        $('.active').html(text);
+                        //        $('.newsList').hide();
+                        //        $('.active').show();
+                        //    }
+                        //});
                     });
-                    html += '</ul>';
-                    $('.categorie').html(html);
-                }
+                });
             });
-
-            $('.active').hide();
             $(".intr").bind("click", function () {
                 $(function () {
                     $('.intr').click(function () {
@@ -53,8 +77,8 @@
                                 alert('smx失败 ');
                             },
                             success: function (data) {
-                                var html = '<div class="panel panel-default"><div class="panel-heading style="text-align:center" "><h3 class="panel-title">作者：' + data['Author'] + '  来源：' + data['Source'] +'</h3></div><div class="panel-body">' + data['Content'] +'</div></div>'
-                                
+                                var html = '<div class="panel panel-default"><div class="panel-heading style="text-align:center" "><h3 class="panel-title">作者：' + data['Author'] + '  来源：' + data['Source'] + '</h3></div><div class="panel-body">' + data['Content'] + '</div></div>'
+
                                 $('#resText').html(html);
                                 $('.active').html(text);
                                 $('.newsList').hide();
@@ -113,8 +137,10 @@
         <div class="row">
             <div class="col-md-3 hidden-md categorie">
                 <ul class="list-group">
-                    <li class="list-group-item">24*7 支持</li>
-                    <li class="list-group-item">每年更新成本</li>
+                    @foreach (NewsWeb.Models.Category item in ViewBag.categorys)
+                    {
+                        <li class="list-group-item cate">@Html.DisplayFor(modelItem => item.CategoryName)</li>
+                    }
                 </ul>
             </div>
             <div class="col-md-9">

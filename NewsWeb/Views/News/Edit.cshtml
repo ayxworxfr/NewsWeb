@@ -18,10 +18,9 @@
         @Html.HiddenFor(model => model.ArticleId)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CategoryId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CategoryId, "", new { @class = "text-danger" })
+            <label class="control-label col-sm-2" for="CommonModel_CategoryID">栏目</label>
+            <div class="col-sm-10">
+                <select class="categorie" style="margin:0 0"></select>
             </div>
         </div>
 
@@ -78,6 +77,26 @@
             window.editor = K.create('#Content', {
                 width: '500px',
                 height: '300px'
+            });
+        });
+    </script>
+    <script src="/Scripts/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $.ajax({
+                type: "POST",
+                url: "http://localhost:9170/Categorie/FindAll",
+                dataType: "json",
+                error: function () {
+                    alert('smx失败 ');
+                },
+                success: function (data) {
+                    var html = '';
+                    $.each(data, function (commentIndex, comment) {
+                        html += '<option value="' + comment['CategoryId'] + '">' + comment['CategoryName'] + '</option>';
+                    });
+                    $('.categorie').html(html);
+                }
             });
         });
     </script>

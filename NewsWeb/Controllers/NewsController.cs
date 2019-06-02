@@ -17,7 +17,16 @@ namespace NewsWeb.Controllers
         static int page_pre = 0;                // 上一页
         static int page_next = 2;               // 下一页
         static int page_show = 2;               // 一页展示数量
+        
+        public ActionResult FilterCa(string categorie)
+        {
+            var cat = db.Categorys.SingleOrDefault(p => p.CategoryName == categorie);
 
+            var articles = db.Articles.Where(p => p.ArticleId == cat.CategoryId);
+            ViewBag.categorys = db.Categorys.ToList();
+            //var articles = db.Articles.Where(p => p.ArticleId == cat.CategoryId).OrderBy(o => o.ArticleId).Skip(((int)page_num - 1) * page_show).Take(page_show);
+            return View("Show", articles);
+        }
         public ActionResult Show(int? page_num)
         {
             if (page_num == null)
@@ -28,6 +37,7 @@ namespace NewsWeb.Controllers
             page_total = db.Articles.Count() / page_show + 1;
             if (page_pre < 1) page_pre = 1;
             if (page_next > page_total) page_next = page_total;
+            ViewBag.categorys = db.Categorys.ToList();
             ViewBag.page_pre = "/News/Show?page_num=" + page_pre;
             ViewBag.page_next = "/News/Show?page_num=" + page_next;
             ViewBag.page_tail = "/News/Show?page_num=" + page_total;
